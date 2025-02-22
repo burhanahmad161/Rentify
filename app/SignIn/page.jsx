@@ -3,28 +3,56 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true); // Toggle between Login and Sign-Up
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [otp, setOtp] = useState("");
+  const [generatedOtp, setGeneratedOtp] = useState(null);
   const [error, setError] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const sendOtp = async () => {
+    setError("");
+    if (!email) {
+      setError("Please enter your email.");
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/sendEmail", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setGeneratedOtp(data.otp);
+        setOtpSent(true);
+      } else {
+        setError(data.error);
+      }
+    } catch (err) {
+      setError("Failed to send OTP.");
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
-    if (isLogin) {
-      // Handle Sign-In logic
-      if (!email || !password) {
-        setError("Please fill in all fields.");
-        return;
-      }
-      console.log("Signing in with:", email, password);
-      router.push("/UserDashboard"); // Redirect to dashboard after login
-    } else {
-      // Handle Sign-Up logic
-      if (!email || !password || !confirmPassword) {
+  
+    if (!email || !password) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+  
+    let requestBody = { email, password, action: isLogin ? "login" : "register" };
+  
+    if (!isLogin) {
+      if (!confirmPassword || !otp) {
         setError("Please fill in all fields.");
         return;
       }
@@ -32,10 +60,34 @@ export default function AuthPage() {
         setError("Passwords do not match.");
         return;
       }
-      console.log("Signing up with:", email, password);
-      router.push("/UserDashboard"); // Redirect to dashboard after sign-up
+      if (parseInt(otp) !== generatedOtp) {
+        setError("Invalid OTP.");
+        return;
+      }
+  
+      requestBody.confirmPassword = confirmPassword;
+      requestBody.otp = otp;
+    }
+  
+    try {
+      const res = await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({email, password, action: isLogin ? "login" : "register"}),
+      });
+  
+      const data = await res.json();
+      if (res.ok) {
+        console.log(`${isLogin ? "Sign-in" : "Signup"} successful:`, data);
+        router.push("/UserDashboard");
+      } else {
+        setError(data.error);
+      }
+    } catch (error) {
+      setError(`Failed to ${isLogin ? "sign in" : "sign up"}.`);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -50,10 +102,7 @@ export default function AuthPage() {
         )}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </label>
             <input
@@ -61,16 +110,40 @@ export default function AuthPage() {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Enter your email"
               required
             />
           </div>
+          {!isLogin && (
+            <>
+              <button
+                type="button"
+                onClick={sendOtp}
+                className="w-full bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 focus:outline-none"
+              >
+                Send OTP
+              </button>
+              {otpSent && (
+                <div className="mt-4">
+                  <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
+                    Enter OTP
+                  </label>
+                  <input
+                    type="text"
+                    id="otp"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    className="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    placeholder="Enter OTP"
+                    required
+                  />
+                </div>
+              )}
+            </>
+          )}
           <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
@@ -78,17 +151,14 @@ export default function AuthPage() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               placeholder="Enter your password"
               required
             />
           </div>
           {!isLogin && (
             <div className="mb-4">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
                 Confirm Password
               </label>
               <input
@@ -96,7 +166,7 @@ export default function AuthPage() {
                 id="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className=" text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Confirm your password"
                 required
               />
@@ -104,17 +174,14 @@ export default function AuthPage() {
           )}
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none"
           >
             {isLogin ? "Sign In" : "Sign Up"}
           </button>
         </form>
         <p className="mt-4 text-center text-gray-600">
           {isLogin ? "Don't have an account? " : "Already have an account? "}
-          <button
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-indigo-600 hover:underline"
-          >
+          <button onClick={() => setIsLogin(!isLogin)} className="text-indigo-600 hover:underline">
             {isLogin ? "Sign Up" : "Sign In"}
           </button>
         </p>

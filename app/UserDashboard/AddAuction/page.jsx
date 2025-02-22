@@ -60,7 +60,7 @@ const AddAuction = () => {
 
             if (response.ok) {
                 setMessage("Auction added successfully!");
-                router.push("/auctions");
+                router.push("/UserDashboard/Auctions");
             } else {
                 setMessage("Failed to add auction.");
             }
@@ -86,7 +86,7 @@ const AddAuction = () => {
                         <TextField label="Description" type="text" name="description" value={formData.description} onChange={handleChange} required fullWidth variant="outlined" />
                     </Box>
                     <Box mb={3}>
-                        <TextField label="Current Bid" type="text" name="currentBid" value={formData.currentBid} onChange={handleChange} required fullWidth variant="outlined" />
+                        <TextField label="Base Price" type="text" name="currentBid" value={formData.currentBid} onChange={handleChange} required fullWidth variant="outlined" />
                     </Box>
                     <Box mb={3}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
