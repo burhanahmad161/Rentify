@@ -18,7 +18,7 @@ export default function Home() {
           </p>
           <div className="space-x-4">
             <a
-              href="#"
+              href="/UserDashboard/Auctions"
               className="bg-white text-indigo-600 px-6 py-3 rounded-md text-lg font-semibold hover:bg-indigo-50"
             >
               Join Now

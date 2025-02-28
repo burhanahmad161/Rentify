@@ -20,8 +20,10 @@ export default function Auctions() {
                 if (!response.ok) throw new Error("Failed to fetch auctions");
                 const data = await response.json();
                 
-                // Filter auctions with approvalStatus === "accepted"
-                const approvedAuctions = data.filter(auction => auction.approvalStatus === "Accepted");
+                // Filter auctions with approvalStatus === "accepted" and remove expired auctions
+                const approvedAuctions = data.filter(auction => 
+                    auction.approvalStatus === "Accepted" && dayjs(auction.timeRemaining).isAfter(dayjs())
+                );
                 setAuctions(approvedAuctions);
             } catch (err) {
                 setError(err.message);
@@ -65,24 +67,20 @@ export default function Auctions() {
 
 function AuctionCard({ auction }) {
     const [timeLeft, setTimeLeft] = useState(calculateTimeRemaining(auction.timeRemaining));
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [registered, setRegistered] = useState(false); // Track registration state
 
     useEffect(() => {
         const interval = setInterval(() => {
             setTimeLeft(calculateTimeRemaining(auction.timeRemaining));
         }, 1000);
-
         return () => clearInterval(interval);
     }, [auction.timeRemaining]);
 
     return (
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="relative h-64">
-                <Image
-                    src={auction.image}
-                    alt={auction.title}
-                    layout="fill"
-                    objectFit="cover"
-                />
+                <Image src={auction.image} alt={auction.title} layout="fill" objectFit="cover" />
             </div>
             <div className="p-6">
                 <h3 className="text-xl font-bold text-gray-900 mb-2">{auction.title}</h3>
@@ -93,14 +91,96 @@ function AuctionCard({ auction }) {
                         <p className="text-sm text-gray-500">Base Price</p>
                         <p className="text-lg font-semibold text-gray-900">${auction.currentBid}</p>
                     </div>
-                    <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
-                        Register
+                    <button
+                        className={`px-4 py-2 rounded-md ${
+                            registered ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"
+                        } text-white`}
+                        onClick={() => setIsModalOpen(true)}
+                        disabled={registered}
+                    >
+                        {registered ? "Registered" : "Register"}
                     </button>
                 </div>
 
                 <p className={`text-sm text-center font-semibold ${timeLeft.expired ? "text-red-500" : "text-green-600"}`}>
                     {timeLeft.expired ? "Auction ended" : `Auction Starts In: ${timeLeft.time}`}
                 </p>
+            </div>
+
+            {isModalOpen && (
+                <RegisterModal
+                    auctionId={auction.auctionId}
+                    onClose={() => setIsModalOpen(false)}
+                    onSuccess={() => setRegistered(true)} // Set registration state on success
+                />
+            )}
+        </div>
+    );
+}
+function RegisterModal({ auctionId, onClose, onSuccess }) {
+    const [name, setName] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
+
+    const handleRegister = async () => {
+        if (!name.trim()) {
+            setError("Name is required.");
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+        setSuccess(false);
+
+        try {
+            const response = await fetch(`/api/auctions/${auctionId}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ auctionId, name }),
+            });
+
+            if (!response.ok) throw new Error("Failed to register");
+
+            setSuccess(true);
+            setTimeout(() => {
+                onSuccess(); // Notify AuctionCard of successful registration
+                onClose();
+            }, 1500);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+                <h2 className="text-black text-xl font-bold mb-4">Register for Auction</h2>
+                {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+                {success && <p className="text-green-500 text-sm mb-2">Registered successfully!</p>}
+
+                <input
+                    type="text"
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full p-2 border rounded mb-4 text-gray-900"
+                />
+
+                <div className="flex justify-end space-x-2">
+                    <button className="bg-gray-400 text-white px-4 py-2 rounded-md" onClick={onClose}>
+                        Cancel
+                    </button>
+                    <button
+                        className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                        onClick={handleRegister}
+                        disabled={loading}
+                    >
+                        {loading ? "Registering..." : "Submit"}
+                    </button>
+                </div>
             </div>
         </div>
     );

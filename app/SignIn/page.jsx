@@ -79,9 +79,10 @@ export default function AuthPage() {
       const data = await res.json();
       if (res.ok) {
         console.log(`${isLogin ? "Sign-in" : "Signup"} successful:`, data);
+        //localStorage.setItem('jwtToken', data.token);
         router.push("/UserDashboard");
       } else {
-        setError(data.error);
+        setError("Password must be at least 8 characters long, contain a capital letter, a number, and a special character");
       }
     } catch (error) {
       setError(`Failed to ${isLogin ? "sign in" : "sign up"}.`);
