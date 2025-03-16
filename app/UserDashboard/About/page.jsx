@@ -61,9 +61,9 @@ export default function About() {
               />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mt-6">
-            Burhan Ahmad
+            Ifra Fazal
             </h3>
-            <p className="text-gray-600 mt-2">CTO</p>
+            <p className="text-gray-600 mt-2">SQA Lead</p>
           </div>
           <div className="text-center">
             <div className="relative h-64 w-64 mx-auto rounded-full overflow-hidden shadow-lg">

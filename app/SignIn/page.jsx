@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState(""); // New state for username
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otp, setOtp] = useState("");
@@ -43,16 +44,16 @@ export default function AuthPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-  
+
     if (!email || !password) {
       setError("Please fill in all required fields.");
       return;
     }
-  
+
     let requestBody = { email, password, action: isLogin ? "login" : "register" };
-  
+
     if (!isLogin) {
-      if (!confirmPassword || !otp) {
+      if (!username || !confirmPassword || !otp) {
         setError("Please fill in all fields.");
         return;
       }
@@ -64,31 +65,34 @@ export default function AuthPage() {
         setError("Invalid OTP.");
         return;
       }
-  
+
+      requestBody.username = username; // Add username to the request body
       requestBody.confirmPassword = confirmPassword;
       requestBody.otp = otp;
     }
-  
+
     try {
       const res = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({email, password, action: isLogin ? "login" : "register"}),
+        body: JSON.stringify(requestBody),
       });
-  
+
       const data = await res.json();
       if (res.ok) {
         console.log(`${isLogin ? "Sign-in" : "Signup"} successful:`, data);
-        //localStorage.setItem('jwtToken', data.token);
+        if(isLogin==="Sign-in"){
+          localStorage.setItem("jwtToken", data.token);
+          console.log("Token:", data.token);
+        }
         router.push("/UserDashboard");
       } else {
-        setError("Password must be at least 8 characters long, contain a capital letter, a number, and a special character");
+        setError(data.error || "Password must be at least 8 characters long, contain a capital letter, a number, and a special character");
       }
     } catch (error) {
       setError(`Failed to ${isLogin ? "sign in" : "sign up"}.`);
     }
   };
-  
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -118,6 +122,20 @@ export default function AuthPage() {
           </div>
           {!isLogin && (
             <>
+              <div className="mb-4">
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="Enter your Full Name"
+                  required
+                />
+              </div>
               <button
                 type="button"
                 onClick={sendOtp}
@@ -167,7 +185,7 @@ export default function AuthPage() {
                 id="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className=" text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                className="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                 placeholder="Confirm your password"
                 required
               />

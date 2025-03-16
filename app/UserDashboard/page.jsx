@@ -1,9 +1,36 @@
 "use client";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import AuctionPic from "../../Assets/Auction.png";
 import ChatPic from "../../Assets/chat.png";
 import AiPic from "../../Assets/artificial-intelligence.png";
 export default function Home() {
+  const [userId, setUserId] = useState("");
+  useEffect(() => {
+    const fetchUserId = async () => {
+      try {
+        console.log(localStorage.getItem("jwtToken"));
+        const response = await fetch("/api/users", {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem("jwtToken")}`
+          },
+          body: JSON.stringify({ action: "getId" }),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setUserId(data.userId);
+          console.log("User authenticated", data.userId);
+        } else {
+          console.log("User not authenticated", data.error);
+        }
+      } catch (error) {
+        console.error("API error:", error);
+      }
+    };
+    fetchUserId();
+  }, []);
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Hero Section */}

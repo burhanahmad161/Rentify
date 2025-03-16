@@ -4,7 +4,7 @@ import { createUser, isValidUser, getUserId, verifyToken } from '../../../lib/ac
 export const POST = async (req) => {
   try {
     // Extract the data from the request body
-    const { email, password, action } = await req.json();
+    const { email, password, action,username } = await req.json();
 
     // Handle 'signin' action
     if (action === 'login') {
@@ -32,7 +32,7 @@ export const POST = async (req) => {
           { status: 401 }
         );
       }
-
+      console.log('Verifying token in Route:', token);
       const decoded = verifyToken(token); // Verify the token
       if (!decoded) {
         return new Response(
@@ -50,9 +50,9 @@ export const POST = async (req) => {
 
     // Handle 'signup' action
     if (action === 'register') {
-      console.log('Creating user:', { email,password});
+      console.log('Creating user:', { email,password,username });
       // Ensure you're passing all the necessary fields to createUser
-      const newUser = await createUser({ email, password});
+      const newUser = await createUser({ email, password,username });
       return new Response(
         JSON.stringify(newUser),
         { status: 201 }
