@@ -78,10 +78,12 @@ export default function AuthPage() {
         body: JSON.stringify(requestBody),
       });
 
+      console.log("Req Body",requestBody);
+
       const data = await res.json();
       if (res.ok) {
         console.log(`${isLogin ? "Sign-in" : "Signup"} successful:`, data);
-        if(isLogin==="Sign-in"){
+        if(isLogin){
           localStorage.setItem("jwtToken", data.token);
           console.log("Token:", data.token);
         }
