@@ -43,7 +43,7 @@ export const POST = async (req) => {
 
       console.log('Verified User ID:', decoded.userId);
       return new Response(
-        JSON.stringify({ userId: decoded.userId }),
+        JSON.stringify({ userId: decoded.email }),
         { status: 200 }
       );
     }

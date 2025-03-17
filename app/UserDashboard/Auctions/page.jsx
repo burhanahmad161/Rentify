@@ -12,6 +12,34 @@ export default function Auctions() {
     const [auctions, setAuctions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [username, setUserName] = useState("");
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                console.log(localStorage.getItem("jwtToken"));
+                const response = await fetch("/api/users", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem("jwtToken")}`
+                    },
+                    body: JSON.stringify({ action: "getId" }),
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    console.log(data);
+                    setUserName(data.userId);
+                    console.log("User authenticated", data.userId);
+                } else {
+                    console.log("User not authenticated", data.error);
+                }
+            } catch (error) {
+                console.error("API error:", error);
+            }
+        };
+        fetchUserId();
+    }, []);
 
     useEffect(() => {
         const fetchAuctions = async () => {
@@ -56,7 +84,7 @@ export default function Auctions() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {auctions.map((auction) => (
-                            <AuctionCard key={auction.auctionId} auction={auction} />
+                            <AuctionCard key={auction.auctionId} auction={auction} username={username} />
                         ))}
                     </div>
                 )}
@@ -65,10 +93,17 @@ export default function Auctions() {
     );
 }
 
-function AuctionCard({ auction }) {
+function AuctionCard({ auction, username }) {
     const [timeLeft, setTimeLeft] = useState(calculateTimeRemaining(auction.timeRemaining));
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [registered, setRegistered] = useState(false); // Track registration state
+
+    // Check if the user is already registered for this auction
+    useEffect(() => {
+        if (auction.RegisteredUsers && auction.RegisteredUsers.includes(username)) {
+            setRegistered(true); // Mark as registered if the username is in the list
+        }
+    }, [auction.RegisteredUsers, username]);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -110,6 +145,7 @@ function AuctionCard({ auction }) {
             {isModalOpen && (
                 <RegisterModal
                     auctionId={auction.auctionId}
+                    username={username}
                     onClose={() => setIsModalOpen(false)}
                     onSuccess={() => setRegistered(true)} // Set registration state on success
                 />
@@ -117,27 +153,21 @@ function AuctionCard({ auction }) {
         </div>
     );
 }
-function RegisterModal({ auctionId, onClose, onSuccess }) {
-    const [name, setName] = useState("");
+
+function RegisterModal({ auctionId, username, onClose, onSuccess }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
     const handleRegister = async () => {
-        if (!name.trim()) {
-            setError("Name is required.");
-            return;
-        }
-
         setLoading(true);
         setError(null);
         setSuccess(false);
-
         try {
             const response = await fetch(`/api/auctions/${auctionId}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ auctionId, name }),
+                body: JSON.stringify({ auctionId, username }),
             });
 
             if (!response.ok) throw new Error("Failed to register");
@@ -160,14 +190,6 @@ function RegisterModal({ auctionId, onClose, onSuccess }) {
                 <h2 className="text-black text-xl font-bold mb-4">Register for Auction</h2>
                 {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
                 {success && <p className="text-green-500 text-sm mb-2">Registered successfully!</p>}
-
-                <input
-                    type="text"
-                    placeholder="Enter your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full p-2 border rounded mb-4 text-gray-900"
-                />
 
                 <div className="flex justify-end space-x-2">
                     <button className="bg-gray-400 text-white px-4 py-2 rounded-md" onClick={onClose}>

@@ -20,6 +20,7 @@ export default function Home() {
         });
         const data = await response.json();
         if (response.ok) {
+          console.log(data);
           setUserId(data.userId);
           console.log("User authenticated", data.userId);
         } else {
@@ -37,7 +38,7 @@ export default function Home() {
       <div className="bg-indigo-600 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-5xl font-bold text-white mb-6">
-            Welcome to BidGO
+            Welcome to BidGO, {userId}
           </h1>
           <p className="text-xl text-indigo-100 mb-8">
             Bid, win, and discover unique items in real-time. Join the excitement

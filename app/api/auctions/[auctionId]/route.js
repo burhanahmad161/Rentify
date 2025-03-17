@@ -36,18 +36,20 @@ export const PUT = async (req, { params }) => {
     try {
       const body = await req.json();
       // Extract budgetId from params
-      const selectedAuctionId = params;
-      if (!selectedAuctionId.auctionId || !body.name) {
+      //const selectedAuctionId = params;\
+      console.log("Hello");
+      console.log("Bitch",body.auctionId, body.username);
+      if (!body.auctionId || !body.username) {
         return new Response(
           JSON.stringify({ error: "Invalid budget ID or amount" }),
           { status: 400 }
         );
       }
-  
+      console.log(body.auctionId, body.username);
       // Call the updateBudgetAmount function
       const result = await registerForAuction({
-        auctionId: selectedAuctionId.auctionId,
-        name: body.name,
+        auctionId: body.auctionId,
+        name: body.username,
       });
   
   
