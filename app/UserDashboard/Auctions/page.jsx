@@ -70,15 +70,14 @@ export default function Auctions() {
         <div className="min-h-screen bg-gray-100">
             {/* Hero Section */}
             <div className="bg-indigo-600 py-20 text-center">
-                <h1 className="text-5xl font-bold text-white mb-6">Live Auctions</h1>
+                <h1 className="text-5xl font-bold text-white mb-6">Available Items</h1>
                 <p className="text-xl text-indigo-100">
-                    Explore and bid on unique items in real-time. Join the excitement now!
-                </p>
+                Discover and rent premium items effortlessly. Experience hassle-free rentals today!                </p>
             </div>
 
             {/* Auctions List Section */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Ongoing Auctions</h2>
+                <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Rental Items</h2>
                 {auctions.length === 0 ? (
                     <p className="text-center text-gray-500">No auctions available.</p>
                 ) : (

@@ -76,7 +76,7 @@ const AddAuction = () => {
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#f5f5f5" }}>
             <Box sx={{ width: "100%", maxWidth: 400, padding: 4, backgroundColor: "white", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
                 <Typography variant="h4" align="center" gutterBottom>
-                    Add Auction
+                    Add Item For Rent
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <Box mb={3}>
@@ -91,7 +91,7 @@ const AddAuction = () => {
                     <Box mb={3}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DateTimePicker
-                                label="Auction End Time"
+                                label="Rent End Time"
                                 value={endTime}
                                 onChange={(newValue) => setEndTime(newValue)}
                                 renderInput={(params) => <TextField {...params} fullWidth required />}
@@ -106,7 +106,7 @@ const AddAuction = () => {
                         {imagePreview && <img src={imagePreview} alt="Preview" style={{ width: "100%", marginTop: "10px", borderRadius: "5px" }} />}
                     </Box>
                     <Button type="submit" variant="contained" color="primary" fullWidth sx={{ padding: "10px", marginTop: "16px" }} disabled={loading}>
-                        {loading ? <CircularProgress size={24} color="inherit" /> : "Add Auction"}
+                        {loading ? <CircularProgress size={24} color="inherit" /> : "Add Item"}
                     </Button>
                     {message && (
                         <Typography variant="body2" color={message.includes("successfully") ? "success.main" : "error.main"} align="center" sx={{ marginTop: "16px" }}>
