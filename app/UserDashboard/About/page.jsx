@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
-import Team1 from "../../../Assets/ceo.png"; // Replace with your team images
-import Team2 from "../../../Assets/ceo.png";
+import Team1 from "../../../Assets/najia.jpg"; // Replace with your team images
+import Team2 from "../../../Assets/ifra.jpg";
 import Team3 from "../../../Assets/ceo.png";
+import Team4 from "../../../Assets/bilal.jpg";
 
 export default function About() {
   return (
@@ -10,9 +11,9 @@ export default function About() {
       {/* Hero Section */}
       <div className="bg-indigo-600 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-5xl font-bold text-white mb-6">About BidGO</h1>
+          <h1 className="text-5xl font-bold text-white mb-6">About Rentify</h1>
           <p className="text-xl text-indigo-100 mb-8">
-            Discover the story behind BidGO and the team that makes it all
+            Discover the story behind Rentify and the team that makes it all
             possible.
           </p>
         </div>
@@ -23,10 +24,7 @@ export default function About() {
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Mission</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            At BidGO, our mission is to revolutionize the way people participate
-            in auctions. We aim to provide a seamless, interactive, and
-            transparent platform where users can bid, win, and discover unique
-            items from the comfort of their homes.
+            At Rentify, Our mission is to revolutionize the way people rent and share high-end products. We aim to provide a seamless, secure, and transparent platform where users can list, discover, and rent premium items with ease and confidence.
           </p>
         </div>
       </div>
@@ -37,34 +35,6 @@ export default function About() {
           Meet Our Team
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="text-center">
-            <div className="relative h-64 w-64 mx-auto rounded-full overflow-hidden shadow-lg">
-              <Image
-                src={Team1}
-                alt="Team Member 1"
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mt-6">
-              Burhan Ahmad
-            </h3>
-            <p className="text-gray-600 mt-2">CEO & Founder</p>
-          </div>
-          <div className="text-center">
-            <div className="relative h-64 w-64 mx-auto rounded-full overflow-hidden shadow-lg">
-              <Image
-                src={Team2}
-                alt="Team Member 2"
-                layout="fill"
-                objectFit="cover"
-              />
-            </div>
-            <h3 className="text-xl font-semibold text-gray-900 mt-6">
-            Ifra Fazal
-            </h3>
-            <p className="text-gray-600 mt-2">SQA Lead</p>
-          </div>
           <div className="text-center">
             <div className="relative h-64 w-64 mx-auto rounded-full overflow-hidden shadow-lg">
               <Image
@@ -82,14 +52,42 @@ export default function About() {
           <div className="text-center">
             <div className="relative h-64 w-64 mx-auto rounded-full overflow-hidden shadow-lg">
               <Image
-                src={Team3}
+                src={Team4}
                 alt="Team Member 3"
                 layout="fill"
                 objectFit="cover"
               />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mt-6">
-            Burhan Ahmad
+            Bilal Ahmad
+            </h3>
+            <p className="text-gray-600 mt-2">Developer</p>
+          </div>
+          <div className="text-center">
+            <div className="relative h-64 w-64 mx-auto rounded-full overflow-hidden shadow-lg">
+              <Image
+                src={Team2}
+                alt="Team Member 2"
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mt-6">
+            Ifra Fazal
+            </h3>
+            <p className="text-gray-600 mt-2">Agile Methodologist</p>
+          </div>
+          <div className="text-center">
+            <div className="relative h-64 w-64 mx-auto rounded-full overflow-hidden shadow-lg">
+              <Image
+                src={Team1}
+                alt="Team Member 1"
+                layout="fill"
+                objectFit="cover"
+              />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 mt-6">
+              Najia Sheraz
             </h3>
             <p className="text-gray-600 mt-2">Lead Designer</p>
           </div>
@@ -123,7 +121,7 @@ export default function About() {
               Innovation
             </h3>
             <p className="text-gray-600 mt-2">
-              We constantly innovate to provide the best auction experience.
+              We constantly innovate to provide the best User experience.
             </p>
           </div>
           <div className="text-center">
@@ -147,7 +145,7 @@ export default function About() {
               Community
             </h3>
             <p className="text-gray-600 mt-2">
-              We foster a vibrant community of bidders and sellers.
+              We foster a vibrant community of renters and sellers.
             </p>
           </div>
           <div className="text-center">
@@ -171,7 +169,7 @@ export default function About() {
               Transparency
             </h3>
             <p className="text-gray-600 mt-2">
-              We ensure a fair and transparent bidding process.
+              We ensure a fair and transparent renting process.
             </p>
           </div>
         </div>
@@ -181,7 +179,7 @@ export default function About() {
       <div className="bg-indigo-600 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-6">
-            Ready to Join the Auction Revolution?
+            Ready to Join the Rentify Revolution?
           </h2>
           <a
             href="#"
