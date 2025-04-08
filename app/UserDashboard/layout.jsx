@@ -54,9 +54,14 @@ const UserDashboard = ({ children }) => {
                 Contact
               </a>
               <a
+                href="/UserDashboard/RentedItems"
+                className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Rented Items
+              </a>
+              <a
                 href="/UserDashboard/AddItem"
                 className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
-
               >
                 Add an Item for Rent
               </a>
