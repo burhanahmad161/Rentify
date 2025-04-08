@@ -36,7 +36,7 @@ const UserDashboard = ({ children }) => {
                 Home
               </a>
               <a
-                href="/UserDashboard/Auctions"
+                href="/UserDashboard/Items"
                 className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Item for Rents
@@ -54,7 +54,7 @@ const UserDashboard = ({ children }) => {
                 Contact
               </a>
               <a
-                href="/UserDashboard/AddAuction"
+                href="/UserDashboard/AddItem"
                 className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
 
               >

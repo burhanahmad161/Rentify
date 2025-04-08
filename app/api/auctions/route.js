@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { createAuction, getAuctions } from "../../../lib/actions/Auctions";
+import { addRentalItem,getAuctions } from "../../../lib/actions/Rental";
 import { NextResponse } from "next/server";
 
 // Configure Cloudinary
@@ -13,9 +13,10 @@ export const POST = async (req) => {
     try {
         const formData = await req.formData();
         const title = formData.get("title");
+        const category = formData.get("category");
         const description = formData.get("description");
-        const currentBid = formData.get("currentBid");
-        const timeRemaining = formData.get("timeRemaining");
+        const price = formData.get("price");
+        const priceUnit = formData.get("priceUnit");
         const image = formData.get("image"); // File
 
         if (!image) {
@@ -33,21 +34,23 @@ export const POST = async (req) => {
         });
 
         // Save auction to MongoDB
-        const newAuction = await createAuction({
+        const newItem = await addRentalItem({
             title,
+            category,
             description,
-            currentBid,
-            timeRemaining,
+            price,
+            priceUnit,
             image: uploadResult.secure_url, // Save Cloudinary URL
         });
 
-        return NextResponse.json(newAuction, { status: 201 });
+        return NextResponse.json(newItem, { status: 201 });
 
     } catch (error) {
         console.error("API error:", error);
         return NextResponse.json({ error: "Server error" }, { status: 500 });
     }
 };
+
 export const GET = async (req) => { 
     try {
         const auctions = await getAuctions();

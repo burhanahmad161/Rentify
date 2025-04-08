@@ -1,4 +1,4 @@
-import { updateAuctionStatus, registerForAuction } from "../../../../lib/actions/Auctions";
+import { updateAuctionStatus, registerForAuction } from "../../../../lib/actions/Rental";
 export const PUT = async (req, { params }) => {
     try {
       // Extract budgetId from params
