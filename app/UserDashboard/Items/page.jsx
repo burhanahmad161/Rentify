@@ -51,7 +51,9 @@ export default function RentalsPage() {
           <p className="text-center text-gray-500">No items available for rent.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {rentals.map((item) => (
+            {rentals
+                .filter((item) => item.approvalStatus === 'Accepted')
+                .map((item) => (
               <RentalCard key={item._id} rental={item} />
             ))}
           </div>
@@ -73,14 +75,14 @@ function RentalCard({ rental }) {
         />
       </div>
       <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-1">{rental.title}</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-1">{rental.title}</h3> 
         <p className="text-gray-500 text-sm mb-1">Category: {rental.category}</p>
         <p className="text-gray-600 mb-4">{rental.description}</p>
         <div className="flex justify-between items-center">
           <div>
             <p className="text-sm text-gray-500">Rental Price</p>
             <p className="text-lg font-semibold text-gray-900">
-              ${rental.price} / {rental.pricingUnit}
+              ${rental.price} / {rental.priceUnit}
             </p>
           </div>
         </div>

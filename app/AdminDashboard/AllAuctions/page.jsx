@@ -44,9 +44,10 @@ export default function Auctions() {
                             <thead>
                                 <tr className="bg-gray-100">
                                     <th className="border px-4 py-2 text-left text-gray-700">Title</th>
+                                    <th className="border px-4 py-2 text-left text-gray-700">Category</th>
                                     <th className="border px-4 py-2 text-left text-gray-700">Description</th>
-                                    <th className="border px-4 py-2 text-left text-gray-700">Base Price</th>
-                                    <th className="border px-4 py-2 text-left text-gray-700">Auction Starts In</th>
+                                    <th className="border px-4 py-2 text-left text-gray-700">Rental Price</th>
+                                    <th className="border px-4 py-2 text-left text-gray-700">Price Unit</th>
                                     <th className="border px-4 py-2 text-center text-gray-700">Status</th>
                                 </tr>
                             </thead>
@@ -77,11 +78,13 @@ function AuctionRow({ auction }) {
     return (
         <tr className="border hover:bg-gray-50">
             <td className="border px-4 py-2 text-black">{auction.title}</td>
+            <td className="border px-4 py-2 text-black">{auction.category}</td>
             <td className="border px-4 py-2 text-black">{auction.description}</td>
-            <td className="border px-4 py-2 text-black">${auction.currentBid}</td>
-            <td className={`border px-4 py-2 ${timeLeft.expired ? "text-red-500" : "text-green-600"}`}>
+            <td className="border px-4 py-2 text-black">{auction.price}</td>
+            <td className="border px-4 py-2 text-black">{auction.priceUnit}</td>
+            {/* <td className={`border px-4 py-2 ${timeLeft.expired ? "text-red-500" : "text-green-600"}`}>
                 {timeLeft.expired ? "Auction ended" : timeLeft.time}
-            </td>
+            </td> */}
             <td className="border px-4 py-2 text-center">
                 <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">{auction.approvalStatus}</button>
             </td>

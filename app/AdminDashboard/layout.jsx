@@ -25,11 +25,9 @@ const AdminDashboard = ({ children }) => {
           </button>
         </div>
         <nav className="flex flex-col mt-4 space-y-2 px-4">
-          <SidebarLink href="/AdminDashboard" icon={<FaGavel size={20} />} text="Pending Auctions" isSidebarOpen={isSidebarOpen} />
-          <SidebarLink href="/UserDashboard/Auctions" icon={<FaPlusCircle size={20} />} text="Add an Auction" isSidebarOpen={isSidebarOpen} />
-          <SidebarLink href="/AdminDashboard/AllAuctions" icon={<FaList size={20} />} text="All Auctions" isSidebarOpen={isSidebarOpen} />
-          <SidebarLink href="/UserDashboard/Contact" icon={<FaCheckCircle size={20} />} text="Completed Auctions" isSidebarOpen={isSidebarOpen} />
-          <SidebarLink href="/UserDashboard/AddAuction" icon={<FaPlusCircle size={20} />} text="Add an Item" isSidebarOpen={isSidebarOpen} />
+          <SidebarLink href="/AdminDashboard" icon={<FaGavel size={20} />} text="Pending Rentals" isSidebarOpen={isSidebarOpen} />
+          <SidebarLink href="/UserDashboard/AddItem" icon={<FaPlusCircle size={20} />} text="Add an Item" isSidebarOpen={isSidebarOpen} />
+          <SidebarLink href="/AdminDashboard/AllAuctions" icon={<FaList size={20} />} text="All Rentals" isSidebarOpen={isSidebarOpen} />
           <button onClick={handleLogout} className="flex items-center space-x-3 text-red-400 hover:text-red-500 py-2 text-sm font-medium">
             <FaSignOutAlt size={20} />
             {isSidebarOpen && <span>Logout</span>}

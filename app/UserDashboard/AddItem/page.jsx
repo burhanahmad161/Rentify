@@ -17,7 +17,7 @@ import * as Yup from "yup";
 
 // Category options
 const categories = ["Electronics","Fashion" , "Vehicles", "Tools", "Furniture", "Others"];
-const pricingUnits = ["day","week","month"]
+const priceUnits = ["day","week","month"]
 
 // Validation Schema
 const validationSchema = Yup.object({
@@ -25,7 +25,7 @@ const validationSchema = Yup.object({
     category: Yup.string().required("Category is required"),
     description: Yup.string().required("Description is required"),
     price: Yup.number().typeError("Must be a number").required("Price is required"),
-    pricingUnit: Yup.string().required("Pricing unit is required"),
+    priceUnit: Yup.string().required("Pricing unit is required"),
 });
 
 const AddItem = () => {
@@ -41,7 +41,7 @@ const AddItem = () => {
             category: "",
             description: "",
             price: "",
-            pricingUnit: "",
+            priceUnit: priceUnits[0],
         },
         validationSchema,
         onSubmit: async (values) => {
@@ -63,7 +63,6 @@ const AddItem = () => {
 
                 const data = await response.json();
                 console.log(data);
-                
                 if (response.ok) {
                     setMessage("Item added for rent successfully!");
                     router.push("/UserDashboard/Items");
@@ -155,14 +154,14 @@ const AddItem = () => {
                     <TextField
                         select
                         label="Pricing Unit"
-                        name="pricingUnit"
+                        name="priceUnit"
                         fullWidth
-                        value={formik.values.pricingUnit}
+                        value={formik.values.priceUnit}
                         onChange={formik.handleChange}
                         helperText="Per hour / day / week / month"
                         variant="outlined"
                     > 
-                    {pricingUnits.map((cat) => (
+                    {priceUnits.map((cat) => (
                         <MenuItem key={cat} value={cat}>{cat}</MenuItem>
                     ))}
                     </TextField>
