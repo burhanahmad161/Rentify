@@ -33,9 +33,9 @@ export default function Auctions() {
         }
     };
 
-    const handleApprove = async (auctionId) => {
+    const handleApprove = async (rentalId) => {
         try {
-            const response = await fetch(`/api/auctions/${auctionId}`, {
+            const response = await fetch(`/api/auctions/${rentalId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export default function Auctions() {
             // Update state after approval
             setAuctions((prevAuctions) =>
                 prevAuctions.map(auction =>
-                    auction.auctionId === auctionId ? { ...auction, approvalStatus: "Accepted" } : auction
+                    auction.rentalId === rentalId ? { ...auction, approvalStatus: "Accepted" } : auction
                 )
             );
         } catch (error) {
@@ -75,6 +75,7 @@ export default function Auctions() {
                                     <th className="border px-4 py-2 text-left text-gray-700">Description</th>
                                     <th className="border px-4 py-2 text-left text-gray-700">Rental Price</th>
                                     <th className="border px-4 py-2 text-left text-gray-700">Price Unit</th>
+                                    <th className="border px-4 py-2 text-left text-gray-700">Owner Id</th>
                                     <th className="border px-4 py-2 text-center text-gray-700">Action</th>
                                 </tr>
                             </thead>
@@ -109,6 +110,9 @@ function AuctionRow({ auction, onApprove }) {
             <td className="border px-4 py-2 text-black">{auction.description}</td>
             <td className="border px-4 py-2 text-black">${auction.price}</td>
             <td className="border px-4 py-2 text-black">{auction.priceUnit}</td>
+            <td className="border px-4 py-2 text-black">{auction.owner}</td>
+
+    
             {/* <td className={`border px-4 py-2 ${timeLeft.expired ? "text-red-500" : "text-green-600"}`}>
                 {timeLeft.expired ? "Auction ended" : timeLeft.time}
             </td> */}
@@ -117,7 +121,7 @@ function AuctionRow({ auction, onApprove }) {
                     <span className="text-green-600 font-semibold">Approved</span>
                 ) : (
                     <button
-                        onClick={() => onApprove(auction.auctionId)}
+                        onClick={() => onApprove(auction.rentalId)}
                         className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
                     >
                         Approve

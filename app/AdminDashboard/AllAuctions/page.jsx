@@ -48,6 +48,8 @@ export default function Auctions() {
                                     <th className="border px-4 py-2 text-left text-gray-700">Description</th>
                                     <th className="border px-4 py-2 text-left text-gray-700">Rental Price</th>
                                     <th className="border px-4 py-2 text-left text-gray-700">Price Unit</th>
+                                    <th className="border px-4 py-2 text-center text-gray-700">Owner Id</th>
+                                    <th className="border px-4 py-2 text-center text-gray-700">Renter Id</th>
                                     <th className="border px-4 py-2 text-center text-gray-700">Status</th>
                                 </tr>
                             </thead>
@@ -82,6 +84,8 @@ function AuctionRow({ auction }) {
             <td className="border px-4 py-2 text-black">{auction.description}</td>
             <td className="border px-4 py-2 text-black">{auction.price}</td>
             <td className="border px-4 py-2 text-black">{auction.priceUnit}</td>
+            <td className="border px-4 py-2 text-black">{auction.owner}</td>
+            <td className="border px-4 py-2 text-black">{auction.rentedBy}</td>
             {/* <td className={`border px-4 py-2 ${timeLeft.expired ? "text-red-500" : "text-green-600"}`}>
                 {timeLeft.expired ? "Auction ended" : timeLeft.time}
             </td> */}

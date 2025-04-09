@@ -1,9 +1,9 @@
 import { updateAuctionStatus, registerForAuction } from "../../../../lib/actions/Rental";
 export const PUT = async (req, { params }) => {
     try {
-      // Extract budgetId from params
       const selectedAuctionId = params;
-      console.log("Selected budget ID:", selectedAuctionId.auctionId);
+      console.log(selectedAuctionId);
+      console.log("Selected Item Id:", selectedAuctionId.auctionId);
       // Validate input
       if (!selectedAuctionId.auctionId) {
         return new Response(
@@ -14,7 +14,7 @@ export const PUT = async (req, { params }) => {
   
       // Call the updateBudgetAmount function
       const result = await updateAuctionStatus({
-        auctionId: selectedAuctionId.auctionId,
+        rentalId: selectedAuctionId.auctionId,
       });
   
   
