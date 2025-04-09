@@ -1,4 +1,5 @@
-import { updateAuctionStatus, registerForAuction } from "../../../../lib/actions/Rental";
+import { updateAuctionStatus, registerForAuction,deleteMyItem } from "../../../../lib/actions/Rental";
+
 export const PUT = async (req, { params }) => {
     try {
       const selectedAuctionId = params;
@@ -32,6 +33,7 @@ export const PUT = async (req, { params }) => {
       );
     }
   };
+
   export const POST = async (req, { params, body }) => {
     try {
       const body = await req.json();
@@ -63,6 +65,22 @@ export const PUT = async (req, { params }) => {
       // Return error response
       return new Response(
         JSON.stringify({ error: "Server error", details: error.message }),
+        { status: 500 }
+      );
+    }
+  }
+  
+  export async function DELETE(request, { params }) {
+    try {
+      const auctionId = params.auctionId;
+      console.log("Rental ID received At API AUCTION:", auctionId);
+      
+      const result = await deleteMyItem({ _id: auctionId });
+      
+      return Response.json(result, { status: 200 });
+    } catch (error) {
+      return Response.json(
+        { error: error.message },
         { status: 500 }
       );
     }

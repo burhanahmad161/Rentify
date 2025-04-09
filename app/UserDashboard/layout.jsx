@@ -60,6 +60,12 @@ const UserDashboard = ({ children }) => {
                 Rented Items
               </a>
               <a
+                href="/UserDashboard/MyItems"
+                className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                My Items
+              </a>
+              <a
                 href="/UserDashboard/AddItem"
                 className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
               >
