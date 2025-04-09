@@ -54,6 +54,8 @@ const AddItem = () => {
                 });
                 if (imageFile) {
                     formDataToSend.append("image", imageFile);
+                    const owner = localStorage.getItem('userId');
+                    formDataToSend.append("userId",owner);
                 }
 
                 const response = await fetch("/api/auctions", {

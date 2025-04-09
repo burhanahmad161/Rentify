@@ -10,9 +10,14 @@ export const POST = async (req) => {
     if (action === 'login') {
       console.log("Signing in user:", { email, password });
       const result = await isValidUser(email, password);
+      console.log(result);
       if (result.valid) {
         return new Response(
-          JSON.stringify({ success: true, token: result.token }), // Send token in response
+          JSON.stringify({ 
+            success: true,
+             token: result.token,
+             userId: result.userId
+            }), // Send token in response
           { status: 200 }
         );
       } else {

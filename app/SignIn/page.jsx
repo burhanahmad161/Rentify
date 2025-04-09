@@ -81,10 +81,12 @@ export default function AuthPage() {
       console.log("Req Body",requestBody);
 
       const data = await res.json();
+      console.log("Response: ", data);
       if (res.ok) {
         console.log(`${isLogin ? "Sign-in" : "Signup"} successful:`, data);
         if(isLogin){
           localStorage.setItem("jwtToken", data.token);
+          localStorage.setItem('userId', data.userId);
           console.log("Token:", data.token);
         }
         router.push("/UserDashboard");

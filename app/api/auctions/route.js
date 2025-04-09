@@ -17,7 +17,8 @@ export const POST = async (req) => {
         const description = formData.get("description");
         const price = formData.get("price");
         const priceUnit = formData.get("priceUnit");
-        const image = formData.get("image"); // File
+        const image = formData.get("image");
+        const owner = formData.get("userId"); 
 
         if (!image) {
             return NextResponse.json({ error: "Image is required" }, { status: 400 });
@@ -32,6 +33,7 @@ export const POST = async (req) => {
         const uploadResult = await cloudinary.uploader.upload(base64Image, {
             folder: "auctions",
         });
+        console.log("User Id",owner);
 
         // Save auction to MongoDB
         const newItem = await addRentalItem({
@@ -41,6 +43,7 @@ export const POST = async (req) => {
             price,
             priceUnit,
             image: uploadResult.secure_url, // Save Cloudinary URL
+            owner
         });
 
         return NextResponse.json(newItem, { status: 201 });
