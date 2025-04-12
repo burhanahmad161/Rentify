@@ -19,7 +19,7 @@ export default function MyItems() {
         const res = await fetch("/api/auctions");
         if (!res.ok) throw new Error("Failed to fetch rentals");
         const data = await res.json();
-        
+
         // Filter items where owner matches logged-in user
         const userItems = data.filter(item => item.owner === storedUserId);
         setRentals(userItems);
@@ -29,17 +29,17 @@ export default function MyItems() {
         setLoading(false);
       }
     };
-    
+
     if (storedUserId) fetchRentals();
   }, []);
 
   const handleDelete = async (itemId) => {
     try {
-           // Show confirmation dialog
-    const userConfirmed = window.confirm(
+      // Show confirmation dialog
+      const userConfirmed = window.confirm(
         "Are you sure you want to delete this item? This action cannot be undone."
       );
-      
+
       if (!userConfirmed) {
         return; // Exit if user cancels
       }
@@ -53,7 +53,7 @@ export default function MyItems() {
       });
 
       if (!response.ok) throw new Error("Failed to delete item");
-      
+
       // Remove deleted item from state
       setRentals(prev => prev.filter(item => item._id !== itemId));
     } catch (error) {
@@ -81,7 +81,16 @@ export default function MyItems() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {rentals.map((item) => (
-              <RentalCard key={item.rentalId} rental={item} onDelete={handleDelete} />
+              <div key={item.rentalId} className="relative">
+                <RentalCard rental={item} onDelete={handleDelete} />
+
+                {/* Conditionally render delete icon or rented sign */}
+                {item.isRented && (
+                  <div className="absolute top-2 right-2 bg-green-600 text-white p-2 rounded-full text-xs">
+                    Rented
+                  </div>
+                )}
+              </div>
             ))}
           </div>
         )}
@@ -112,7 +121,7 @@ function RentalCard({ rental, onDelete }) {
           <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[rental.approvalStatus]}`}>
             {rental.approvalStatus}
           </span>
-          <button 
+          { !rental.isRented && (<button
             onClick={() => onDelete(rental._id)}
             className="text-red-600 hover:text-red-800"
             title="Delete item"
@@ -121,9 +130,10 @@ function RentalCard({ rental, onDelete }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           </button>
+          )}
         </div>
 
-        <h3 className="text-xl font-bold text-gray-900 mb-1">{rental.title}</h3> 
+        <h3 className="text-xl font-bold text-gray-900 mb-1">{rental.title}</h3>
         <p className="text-gray-500 text-sm mb-1">Category: {rental.category}</p>
         <p className="text-gray-600 mb-4">{rental.description}</p>
         <div className="flex justify-between items-center">
