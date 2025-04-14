@@ -16,14 +16,15 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 // Category options
-const categories = ["Electronics","Fashion" , "Vehicles", "Tools", "Furniture", "Others"];
-const priceUnits = ["day","week","month"]
+const categories = ["Electronics", "Fashion", "Vehicles", "Tools", "Furniture", "Others"];
+const priceUnits = ["day", "week", "month"]
 
 // Validation Schema
 const validationSchema = Yup.object({
     title: Yup.string().required("Item title is required"),
     category: Yup.string().required("Category is required"),
     description: Yup.string().required("Description is required"),
+    location: Yup.string().required("Location is required"),
     price: Yup.number().typeError("Must be a number").required("Price is required"),
     priceUnit: Yup.string().required("Pricing unit is required"),
 });
@@ -40,6 +41,7 @@ const AddItem = () => {
             title: "",
             category: "",
             description: "",
+            location: "",
             price: "",
             priceUnit: priceUnits[0],
         },
@@ -55,7 +57,7 @@ const AddItem = () => {
                 if (imageFile) {
                     formDataToSend.append("image", imageFile);
                     const owner = localStorage.getItem('userId');
-                    formDataToSend.append("userId",owner);
+                    formDataToSend.append("userId", owner);
                 }
 
                 const response = await fetch("/api/auctions", {
@@ -98,7 +100,7 @@ const AddItem = () => {
                 boxShadow: 3,
                 '& .MuiTextField-root': { marginBottom: 2 },
             }}>
-                <Typography variant="h4" align="center" color="theme.palette.indigo" gutterBottom>
+                <Typography variant="h4" align="center" color="gray" gutterBottom>
                     Add Item For Rent
                 </Typography>
                 <form onSubmit={formik.handleSubmit}>
@@ -143,6 +145,17 @@ const AddItem = () => {
                     />
 
                     <TextField
+                        label="Approximate Location"
+                        name="location"
+                        fullWidth
+                        value={formik.values.location}
+                        onChange={formik.handleChange}
+                        error={formik.touched.location && Boolean(formik.errors.location)}
+                        helperText={formik.touched.description ? formik.errors.location || "Gulshan-e-Ravi, Lahore etc." : "Gulshan-e-Ravi, Lahore etc."}
+                        variant="outlined"
+                    />
+
+                    <TextField
                         label="Rental Price"
                         name="price"
                         fullWidth
@@ -162,10 +175,10 @@ const AddItem = () => {
                         onChange={formik.handleChange}
                         helperText="Per hour / day / week / month"
                         variant="outlined"
-                    > 
-                    {priceUnits.map((cat) => (
-                        <MenuItem key={cat} value={cat}>{cat}</MenuItem>
-                    ))}
+                    >
+                        {priceUnits.map((cat) => (
+                            <MenuItem key={cat} value={cat}>{cat}</MenuItem>
+                        ))}
                     </TextField>
 
                     <Box my={2}>

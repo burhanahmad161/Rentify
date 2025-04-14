@@ -15,6 +15,7 @@ export const POST = async (req) => {
         const title = formData.get("title");
         const category = formData.get("category");
         const description = formData.get("description");
+        const location = formData.get("location");
         const price = formData.get("price");
         const priceUnit = formData.get("priceUnit");
         const image = formData.get("image");
@@ -40,6 +41,7 @@ export const POST = async (req) => {
             title,
             category,
             description,
+            location,
             price,
             priceUnit,
             image: uploadResult.secure_url, // Save Cloudinary URL
