@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
 
 const RentedItems = () => {
   const [items, setItems] = useState([]);
   const [userId, setUserId] = useState(null);
 
-  // Set the userId after component mounts
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     setUserId(storedUserId);
-  }, []); // Empty dependency array ensures this runs only once, when the component mounts
+  }, []);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -20,14 +20,18 @@ const RentedItems = () => {
     };
 
     fetchItems();
-  }, []); // Empty dependency array ensures the fetch runs once
+  }, []);
 
-  // Filter items that the user has rented
   const userItems = items.filter(item => item.rentedBy === userId);
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">My Rented Items</h2>
+       <div className="bg-indigo-600 py-20 text-center mb-5">
+        <h1 className="text-5xl font-bold text-white mb-6">My Rented Items</h1>
+        <p className="text-xl text-indigo-100">
+          Manage you rented items here
+        </p>
+      </div>
       {userId === null ? (
         <p>Loading your info...</p>
       ) : userItems.length === 0 ? (
@@ -35,17 +39,7 @@ const RentedItems = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {userItems.map((item) => (
-            <div key={item._id} className="border p-4 rounded shadow">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-full h-48 object-cover rounded mb-2"
-              />
-              <h3 className="text-lg font-bold">{item.title}</h3>
-              <p className="text-sm text-gray-600">{item.category}</p>
-              <p className="text-sm">Price: {item.price}/{item.priceUnit}</p>
-              <p className="text-xs mt-2 text-green-600">Status: Rented</p>
-            </div>
+            <RentedItemCard key={item._id} item={item} />
           ))}
         </div>
       )}
@@ -54,3 +48,45 @@ const RentedItems = () => {
 };
 
 export default RentedItems;
+
+const RentedItemCard = ({ item }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+      <div className="relative h-64">
+        <img
+          src={item.image}
+          alt={item.title}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="p-4 flex flex-col justify-between flex-grow">
+        <div>
+          <h3 className="text-xl font-bold text-gray-900 mb-1 line-clamp-2">{item.title}</h3>
+          <p className="text-gray-500 text-sm mb-1">Category: {item.category}</p>
+          <p className="text-gray-600 text-sm mb-2 line-clamp-5">{item.description}</p>
+
+          <div className="mb-2">
+            <p className="text-sm text-gray-500">Rental Price</p>
+            <p className="text-lg font-semibold text-gray-900">
+              ${item.price} / {item.priceUnit}
+            </p>
+          </div>
+
+          <p className="text-sm text-gray-600">
+            Rented On: {dayjs(item.rentedAt).format("MMM D, YYYY")}
+          </p>
+
+          {item.returnDate && (
+            <p className="text-sm text-gray-600">
+              Return By: {dayjs(item.returnDate).format("MMM D, YYYY")}
+            </p>
+          )}
+        </div>
+
+        <div className="mt-4 text-sm font-medium text-green-600">
+          ✅ Status: Rented
+        </div>
+      </div>
+    </div>
+  );
+};
