@@ -1,4 +1,4 @@
-import { updateAuctionStatus, registerForAuction,deleteMyItem } from "../../../../lib/actions/Rental";
+import { updateAuctionStatus, registerForAuction,deleteMyItem,addRatingToItem  } from "../../../../lib/actions/Rental";
 
 export const PUT = async (req, { params }) => {
     try {
@@ -85,3 +85,35 @@ export const PUT = async (req, { params }) => {
       );
     }
   }
+
+  export const PATCH = async (req, { params }) => {
+    try {
+      const auctionId = params.auctionId;
+      const body = await req.json();
+      const { userId, stars } = body;
+      console.log(auctionId);
+
+      if (!userId || stars===undefined || !auctionId) {
+        return new Response(
+          JSON.stringify({ error: "Missing rating, userId, or rentalId" }),
+          { status: 400 }
+        );
+      }
+  
+      const result = await addRatingToItem({
+        rentalId: auctionId,
+        userId,
+        rating: stars,
+      });
+  
+      return new Response(JSON.stringify({ success: true, result }), {
+        status: 200,
+      });
+    } catch (error) {
+      console.error("Rating error:", error);
+      return new Response(
+        JSON.stringify({ error: "Server error", details: error.message }),
+        { status: 500 }
+      );
+    }
+  };

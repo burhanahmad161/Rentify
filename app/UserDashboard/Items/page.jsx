@@ -37,7 +37,7 @@ export default function RentalsPage() {
     fetchRentals();
   }, []);
 
-  const categories = ["All","Electronics", "Fashion", "Vehicles", "Tools", "Furniture", "Others"];
+  const categories = ["All", "Electronics", "Fashion", "Vehicles", "Tools", "Furniture", "Others"];
 
   if (loading)
     return <p className="text-center py-10">Loading items...</p>;
@@ -70,42 +70,42 @@ export default function RentalsPage() {
 
       {/* Rentals List */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div className="sticky top-0 z-10 shadow-md py-4 px-4 md:px-8">
-        <div className="rounded flex flex-col md:flex-row gap-4 pb-2">
-          <select
-            value={filters.category}
-            onChange={(e) =>
-              setFilters({ ...filters, category: e.target.value })
-            }
-            className="w-full md:w-1/3 px-4 py-2 border border-gray-600 rounded-lg text-indigo-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+        <div className="sticky top-0 z-10 shadow-md py-4 px-4 md:px-8">
+          <div className="rounded flex flex-col md:flex-row gap-4 pb-2">
+            <select
+              value={filters.category}
+              onChange={(e) =>
+                setFilters({ ...filters, category: e.target.value })
+              }
+              className="w-full md:w-1/3 px-4 py-2 border border-gray-600 rounded-lg text-indigo-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
 
-          <input
-            type="number"
-            placeholder="Min Price"
-            value={filters.minPrice}
-            onChange={(e) =>
-              setFilters({ ...filters, minPrice: e.target.value })
-            }
-            className="w-full md:w-1/3 px-4 py-2 border border-gray-600 rounded-lg text-gray-800 bg-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-          />
+            <input
+              type="number"
+              placeholder="Min Price"
+              value={filters.minPrice}
+              onChange={(e) =>
+                setFilters({ ...filters, minPrice: e.target.value })
+              }
+              className="w-full md:w-1/3 px-4 py-2 border border-gray-600 rounded-lg text-gray-800 bg-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            />
 
-          <input
-            type="number"
-            placeholder="Max Price"
-            value={filters.maxPrice}
-            onChange={(e) =>
-              setFilters({ ...filters, maxPrice: e.target.value })
-            }
-            className="w-full md:w-1/3 px-4 py-2 border border-gray-600 rounded-lg text-gray-800 bg-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-          />
-        </div>
+            <input
+              type="number"
+              placeholder="Max Price"
+              value={filters.maxPrice}
+              onChange={(e) =>
+                setFilters({ ...filters, maxPrice: e.target.value })
+              }
+              className="w-full md:w-1/3 px-4 py-2 border border-gray-600 rounded-lg text-gray-800 bg-white placeholder-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            />
+          </div>
         </div>
 
         {available.length === 0 ? (
@@ -136,9 +136,29 @@ export default function RentalsPage() {
 
 function RentalCard({ rental, onRented }) {
   const [renting, setRenting] = useState(false);
+  const [userRating, setUserRating] = useState(null);
+  const [hasRated, setHasRated] = useState(false);
+  const [avgRating, setAvgRating] = useState(rental.averageRating || 0);
   const [error, setError] = useState(null);
+  const [ratingLoading, setRatingLoading] = useState(false);
+
+  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+
+  useEffect(() => {
+    if (rental.ratings && userId) {
+      const existing = rental.ratings.find(r => r.userId === userId);
+      if (existing) {
+        setHasRated(true);
+        setUserRating(existing.stars);
+      }
+    }
+  }, [rental.ratings, userId]);
 
   const handleRent = async () => {
+
+    const confirmRent = window.confirm("Are you sure you want to rent this item?");
+    if (!confirmRent) return;
+
     setError(null);
     setRenting(true);
     try {
@@ -172,6 +192,28 @@ function RentalCard({ rental, onRented }) {
     }
   };
 
+  const handleRate = async (stars) => {
+    setRatingLoading(true);
+    try {
+      const res = await fetch(`/api/auctions/${rental._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, stars }),
+      });
+      if (!res.ok) throw new Error((await res.json()).message || "Rating failed");
+
+      const data = await res.json();
+      setAvgRating(data.updatedAverage);
+      setHasRated(true);
+      setUserRating(stars);
+    } catch (err) {
+      alert(err.message);
+    }
+    finally {
+      setRatingLoading(false);
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
       <div className="relative h-64">
@@ -189,6 +231,10 @@ function RentalCard({ rental, onRented }) {
         <p className="text-gray-500 text-sm mb-1">
           Category: {rental.category}
         </p>
+        <p className="text-gray-500 text-sm mb-1">
+          Approx. Location: {rental.location ? rental.location : "Location not provided"}
+        </p>
+
         <p className="text-gray-600 mb-4 line-clamp-4">
           {rental.description}
         </p>
@@ -203,6 +249,35 @@ function RentalCard({ rental, onRented }) {
             Posted {dayjs(rental.createdAt).fromNow()}
           </div>
         </div>
+
+        {/* ⭐ Rating Display */}
+        <div className="mb-2">
+          <p className="text-sm text-yellow-600 font-medium">
+            Average Rating: {rental.averageRating !== undefined ? rental.averageRating.toFixed(1) : "No ratings yet"} ⭐
+          </p>
+        </div>
+
+        {/* ⭐ Rating Input */}
+        {!hasRated && userId && (
+          <div className="mb-4">
+            <label className="block text-sm text-black mb-1">Rate this item:</label>
+            {ratingLoading ? (
+              <p className="text-gray-600 text-sm">Submitting rating...</p>
+            ) : (<select
+              value={userRating || ""}
+              onChange={(e) => handleRate(parseInt(e.target.value))}
+              className="w-full border px-3 py-1 rounded text-gray-700"
+            >
+              <option value="">Select Rating</option>
+              {[1, 2, 3, 4, 5].map((n) => (
+                <option key={n} value={n}>
+                  {n} Star{n > 1 && "s"}
+                </option>
+              ))}
+            </select>
+            )}
+          </div>
+        )}
 
         {/* Rent Button */}
         <button
