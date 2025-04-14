@@ -128,7 +128,7 @@ function RentalCard({ rental, onRented }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-full">
       <div className="relative h-64">
         <Image
           src={rental.image}
@@ -136,15 +136,15 @@ function RentalCard({ rental, onRented }) {
           fill
           style={{ objectFit: "cover" }}
         />
-      </div>
-      <div className="p-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-1">
+      </div>  
+      <div className="p-6 flex flex-col justify-between flex-grow">
+        <h3 className="text-xl font-bold text-gray-900 mb-1 line-clamp-2">
           {rental.title}
         </h3>
         <p className="text-gray-500 text-sm mb-1">
           Category: {rental.category}
         </p>
-        <p className="text-gray-600 mb-4">
+        <p className="text-gray-600 mb-4 line-clamp-4">
           {rental.description}
         </p>
         <div className="flex justify-between items-center mb-4">
