@@ -55,7 +55,7 @@ export default function Auctions() {
                             </thead>
                             <tbody>
                                 {auctions.map((auction) => (
-                                    <AuctionRow key={auction.auctionId} auction={auction} />
+                                    <AuctionRow key={auction.rentalId} auction={auction} />
                                 ))}
                             </tbody>
                         </table>

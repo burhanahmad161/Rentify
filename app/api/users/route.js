@@ -1,4 +1,4 @@
-import { createUser, isValidUser, getUserId, verifyToken } from '../../../lib/actions/Users';
+import { createUser, isValidUser, getUserId, verifyToken,getAllUsers } from '../../../lib/actions/Users';
 
 // Define the POST request handler
 export const POST = async (req) => {
@@ -74,5 +74,16 @@ export const POST = async (req) => {
       JSON.stringify({ error: 'Server error' }),
       { status: 500 }
     );
+  }
+};
+
+// ✅ GET Handler to fetch all registered users
+export const GET = async () => {
+  try {
+    const users = await getAllUsers(); // Should return array of { username, email, userId }
+    return new Response(JSON.stringify(users), { status: 200 });
+  } catch (error) {
+    console.error('GET /api/users error:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch users' }), { status: 500 });
   }
 };

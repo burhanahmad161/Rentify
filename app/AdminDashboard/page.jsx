@@ -132,17 +132,17 @@ function AuctionRow({ auction, onApprove }) {
     );
 }
 
-function calculateTimeRemaining(endTime) {
-    const now = dayjs();
-    const end = dayjs(endTime);
-    const diff = end.diff(now);
+// function calculateTimeRemaining(endTime) {
+//     const now = dayjs();
+//     const end = dayjs(endTime);
+//     const diff = end.diff(now);
 
-    if (diff <= 0) {
-        return { time: "00:00:00", expired: true };
-    }
+//     if (diff <= 0) {
+//         return { time: "00:00:00", expired: true };
+//     }
 
-    const duration = dayjs.duration(diff);
-    const formattedTime = `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
+//     const duration = dayjs.duration(diff);
+//     const formattedTime = `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
 
-    return { time: formattedTime, expired: false };
-}
+//     return { time: formattedTime, expired: false };
+// }

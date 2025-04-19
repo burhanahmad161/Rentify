@@ -1,12 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useEffect,useState } from "react";
 import Logo from "../../Assets/4.jpg";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { AuthProvider } from "../../AuthContext";
+
 const UserDashboard = ({ children }) => {
   const [isNavbarOpen, setIsNavbarOpen] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Run only on client side
+    const userId = localStorage.getItem("userId");
+    if (userId === "5821887449") {
+      setIsAdmin(true);
+    }
+  }, []);
 
   const handleLogout = () => {
     // Logic for logging out
@@ -29,6 +39,13 @@ const UserDashboard = ({ children }) => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              {isAdmin && 
+              <a 
+                href="/AdminDashboard"
+                className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Admin DashBoard
+              </a>}
               <a
                 href="/UserDashboard"
                 className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium"

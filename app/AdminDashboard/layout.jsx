@@ -17,8 +17,8 @@ const AdminDashboard = ({ children }) => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className={`bg-[#1E293B] text-white h-full transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-20"} flex flex-col`}>
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+      <div className={`bg-[#1E293B] text-white h-screen sticky top-0 transition-all duration-300 ${isSidebarOpen ? "w-64" : "w-20"} flex flex-col`}>
+      <div className="flex items-center justify-between p-4 border-b border-gray-700">
           {/* <Image src={Logo} alt="BidGO Logo" width={isSidebarOpen ? 150 : 50} height={50} /> */}
           <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-gray-300 hover:text-white">
             {isSidebarOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
@@ -28,6 +28,7 @@ const AdminDashboard = ({ children }) => {
           <SidebarLink href="/AdminDashboard" icon={<FaGavel size={20} />} text="Pending Rentals" isSidebarOpen={isSidebarOpen} />
           <SidebarLink href="/UserDashboard/AddItem" icon={<FaPlusCircle size={20} />} text="Add an Item" isSidebarOpen={isSidebarOpen} />
           <SidebarLink href="/AdminDashboard/AllAuctions" icon={<FaList size={20} />} text="All Rentals" isSidebarOpen={isSidebarOpen} />
+          <SidebarLink href="/AdminDashboard/AllUsers" icon={<FaList size={20} />} text="All Users" isSidebarOpen={isSidebarOpen} />
           <button onClick={handleLogout} className="flex items-center space-x-3 text-red-400 hover:text-red-500 py-2 text-sm font-medium">
             <FaSignOutAlt size={20} />
             {isSidebarOpen && <span>Logout</span>}
@@ -36,7 +37,7 @@ const AdminDashboard = ({ children }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-6 overflow-y-auto">
         <AuthProvider>{children}</AuthProvider>
       </div>
     </div>
